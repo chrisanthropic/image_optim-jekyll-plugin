@@ -12,8 +12,8 @@ module Jekyll
 	  settings = {}
 
     # Does file exists?
-    if File.file?("images/files_mtime.yml")
-	  	settings = YAML::load_file "images/files_mtime.yml"
+    if File.file?("images/image_optim_cache.yml")
+	  	settings = YAML::load_file "images/image_optim_cache.yml"
 	  end
 
 	  image_optim = ImageOptim.new(:pngout => false, :svgo => false, :verbose => false)
@@ -40,7 +40,7 @@ module Jekyll
     end
 
     # Write modification hash to file
-    File.open("images/files_mtime.yml", "w") do |file|
+    File.open("images/image_optim_cache.yml", "w") do |file|
       file.write settings.to_yaml
     end
 	end
