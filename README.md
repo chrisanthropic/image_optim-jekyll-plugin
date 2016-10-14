@@ -63,20 +63,17 @@ Copy `image_optim.rb` to your `_plugins` directory.
 ### Configuration
 _Note: All paths are relative to the site root._
 
-#### `image_glob`
-Path that specifies which images are to be optimized.
-  * Type: `string`
-  * Default: `"images/**/*.{gif,jpg,jpeg,png}"`
-
-#### `archive_dir`
-Directory in which copies of original images are saved for future reference.
+**`archive_dir`**: Directory in which copies of original images are saved for future reference.
   * Type: `string`
   * Default: `"_image_optim_archive"`
 
-#### `cache_file`
-Path to a file where the plugin keeps its internal metadata.
+**`cache_file`**: Path to a file where the plugin keeps its internal metadata.
   * Type: `string`
   * Default: `"_image_optim_cache.yml"`
+
+**`image_glob`**: Path that specifies which images are to be optimized.
+  * Type: `string`
+  * Default: `"images/**/*.{gif,jpg,jpeg,png}"`
 
 You can override configuration defaults by keying them under `image_optim` in `_config.yml`. Here's an example:
 
@@ -95,9 +92,9 @@ exclude:
 
 # image_optim-jekyll-plugin customizations.
 image_optim:
-  image_glob: "assets/img/**/cat-*.{gif,png,jpg,jpeg}"
   archive_dir: "assets/full-res-kittens"
   cache_file: "tmp/kitty-cache.yml"
+  image_glob: "assets/img/**/cat-*.{gif,png,jpg,jpeg}"
 ```
 
 ### License
