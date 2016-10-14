@@ -97,6 +97,8 @@ image_optim:
   image_glob: "assets/img/**/cat-*.{gif,png,jpg,jpeg}"
 ```
 
+_Note: Your use case will dictate whether you choose to include or exclude your `archive_dir` and/or `cache_file` in source control._
+
 ### License
 [I'm not sure yet :/][license-issue]
 
