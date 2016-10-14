@@ -49,7 +49,7 @@ module Jekyll
         # Where do we store our cache file?
         "cache_file" => "_image_optim_cache.yml",
         # What images do we search for?
-        "image_glob" => "assets/img/**/*.{gif,jpg,jpeg,png}",
+        "image_glob" => "images/**/*.{gif,jpg,jpeg,png}",
       }
     end
 
