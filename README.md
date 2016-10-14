@@ -7,15 +7,15 @@ Runs automatically when you `jekyll build`:
 
 ```bash
 # Add a new image to the site.
-cp ~/downloads/cheese-cat-fail.jpg ~/repo/site/assets/img/
+cp ~/downloads/cheese-cat-fail.jpg ~/website/images/
 
 # Build the site; image_optim-jekyll-plugin runs automatically.
-~/repo/site:master > bundle exec jekyll build
-Configuration file: /home/chris/repo/site/_config.yml
-            Source: /home/chris/repo/site
-       Destination: /home/chris/repo/site/_site
+~/website:master > bundle exec jekyll build
+Configuration file: /home/chris/website/_config.yml
+            Source: /home/chris/website
+       Destination: /home/chris/website/_site
       Generating...
-Optimizing assets/img/cheese-cat-fail.jpg
+Optimizing images/cheese-cat-fail.jpg
                     done.
  Auto-regeneration: disabled. Use --watch to enable.
 ```
@@ -23,7 +23,7 @@ Optimizing assets/img/cheese-cat-fail.jpg
 Let's look at what changed:
 
 ```bash
-~/repo/site:master > git status
+~/website:master > git status
 On branch master
 Your branch is up-to-date with 'origin/master'.
 Changes not staged for commit:
@@ -36,14 +36,14 @@ Untracked files:
   (use "git add <file>..." to include in what will be committed)
 
 	_image_optim_archive/cheese-cat-fail-2016-10-14-09-10-15-02de96ea1978a39c4b7860e8d1125773.jpg
-	assets/img/cheese-cat-fail.jpg
+	images/cheese-cat-fail.jpg
 
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
 You see three changes:
 
-  1. New file: `assets/img/cheese-cat-fail.jpg`, which I added manually to my image root (`assets/img`). This image is automatically optimized in-place by the plugin. _Repeat: **this is not the original file**, as optimization is done in-place._
+  1. New file: `images/cheese-cat-fail.jpg`, which I added manually to my image root (`assets/img`). This image is automatically optimized in-place by the plugin. _Repeat: **this is not the original file**, as optimization is done in-place._
   2. New file: `_image_optim_archive/cheese-cat-fail-2016-10-14-09-10-15-02de96ea1978a39c4b7860e8d1125773.jpg`. This is a copy of the original file (before optimization). It's tagged with the date/time of optimization as well as the MD5 of the original content.
   3. Changed file: `_image_optim_cache.yml` is for internal use by the plugin (it keeps track of which images have been optimized, and when).
 
