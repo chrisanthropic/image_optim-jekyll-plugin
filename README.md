@@ -100,7 +100,7 @@ image_optim:
 _**Note**: Your use case will dictate whether you choose to include or exclude your `archive_dir` and/or `cache_file` in source control._
 
 ### License
-[MIT](README.md)
+[MIT](LICENSE.txt)
 
 [chrisanthropic/image_optim-jekyll-plugin]: https://github.com/chrisanthropic/image_optim-jekyll-plugin
 [image_optim]: https://github.com/toy/image_optim
