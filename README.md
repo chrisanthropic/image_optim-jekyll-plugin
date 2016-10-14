@@ -61,7 +61,7 @@ Copy `image_optim.rb` to your `_plugins` directory.
 
 ---
 ### Configuration
-_Note: All paths are relative to the site root._
+_**Note**: All paths are relative to the site root._
 
 **`archive_dir`**: Directory in which copies of original images are saved for future reference.
   * Type: `string`
@@ -97,7 +97,7 @@ image_optim:
   image_glob: "assets/img/**/cat-*.{gif,png,jpg,jpeg}"
 ```
 
-_Note: Your use case will dictate whether you choose to include or exclude your `archive_dir` and/or `cache_file` in source control._
+_**Note**: Your use case will dictate whether you choose to include or exclude your `archive_dir` and/or `cache_file` in source control._
 
 ### License
 [I'm not sure yet :/][license-issue]
