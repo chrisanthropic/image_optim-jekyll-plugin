@@ -3,46 +3,90 @@ require 'yaml'
 
 module Jekyll
 
-    class ImageOptimGenerator < Generator
-        safe true
+  class ImageOptimGenerator < Generator
+    safe true
 
-        def generate(site)
-	  puts 'Optimizing Images'
-	  settings_new = {}
-	  settings = {}
+    ###########################################################################
+    # Entry point for the plugin.
+    def generate(site)
+      # Read configuration. Defaults first, then overrides from _config.yml.
+      config = YAML::load_file "_config.yml"
+      config = config["image_optim"] || {}
+      @config = default_options.merge! config
 
-    # Does file exists?
-    if File.file?("images/image_optim_cache.yml")
-	  	settings = YAML::load_file "images/image_optim_cache.yml"
-	  end
+      # Initialize the ImageOptim library, which does the heavy lifting.
+      @image_optim = ImageOptim.new pngout: false, svgo: false, verbose: false
 
-	  image_optim = ImageOptim.new(:pngout => false, :svgo => false, :verbose => false)
-    Dir.glob('images/**/*.{gif,jpeg,jpg,png}') do |rb_file|
-      # Get the file modification time
-      cmtime = File.mtime(rb_file)
+      # Read the cache file, if it exists.
+      @last_update = YAML::load_file @config["cache_file"] if File.file? @config["cache_file"]
+      @last_update ||= {}
 
-      if settings.has_key?(rb_file)
-        # Is modified?
-        if settings[rb_file] != cmtime
-          image_optim.optimize_image!(rb_file)
-          puts "Optimized: #{rb_file}"
-          thash = {}
-          thash[rb_file] = cmtime
-          settings.merge!(thash)
-        end
+      # Create the originals directory.
+      FileUtils.mkdir_p @config["archive_dir"]
+
+      # Iterate over all images, optimizing as necessary.
+      Dir.glob(@config["image_glob"]) { |image| analyze image }
+
+      # Save modifications back to the cache file.
+      File.open(@config["cache_file"], "w") { |file| file.write @last_update.to_yaml }
+    end
+
+    ###########################################################################
+    # Native settings for the plugin.
+    # Override with corresonding entries to _config.yml under "image_optim"
+    #
+    # Example:
+    #
+    #   [_config.yml]
+    #   image_optim:
+    #     archive_dir: "_my_original_images"
+    #     cache_file: "_custom_file.yml"
+    #     image_glob: "webroot/images/*.png"
+    def default_options
+      {
+        # Where do we store archival copies of the originals?
+        "archive_dir" => "_image_optim_archive",
+        # Where do we store our cache file?
+        "cache_file" => "_image_optim_cache.yml",
+        # What images do we search for?
+        "image_glob" => "images/**/*.{gif,jpg,jpeg,png}",
+      }
+    end
+
+    ###########################################################################
+    # Determine whether or not optimization needs to occur.
+    def analyze(image)
+      if @last_update.has_key? image
+        # If we've touched the image before, but it's been modified, optimize.
+        optimize image if @last_update[image] != File.mtime(image)
       else
-        image_optim.optimize_image!(rb_file)
-        puts "Optimized: #{rb_file}"
-        thash = {}
-        thash[rb_file] = cmtime
-        settings.merge!(thash)
+        # If the image is new, optimize.
+        optimize image
       end
     end
 
-    # Write modification hash to file
-    File.open("images/image_optim_cache.yml", "w") do |file|
-      file.write settings.to_yaml
+    ###########################################################################
+    # In-place image optimization per the ImageOptim library.
+    def optimize(image)
+      puts "Optimizing #{image}"
+      FileUtils.copy image, archival_filename(image)
+      @image_optim.optimize_image! image
+      @last_update[image] = File.mtime image
     end
-	end
+
+    ###########################################################################
+    # Adds the date/time of archival as well as the MD5 digest of the original
+    # source file.
+    def archival_filename(image)
+      ext = File.extname(image)
+      "%s/%s-%s-%s%s" % [
+        @config["archive_dir"],
+        File.basename(image, ext),
+        DateTime.now.strftime("%Y-%m-%d-%H-%M-%S"),
+        Digest::MD5.file(image).hexdigest,
+        ext,
+      ]
     end
+
+  end
 end
