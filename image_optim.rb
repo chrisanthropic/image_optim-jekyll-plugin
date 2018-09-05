@@ -15,7 +15,16 @@ module Jekyll
       @config = default_options.merge! config
 
       # Initialize the ImageOptim library, which does the heavy lifting.
-      @image_optim = ImageOptim.new pngout: false, svgo: false, verbose: false
+      @image_optim = ImageOptim.new(
+        {
+          :allow_lossy => true,  #Allow worker, it is always lossy (defaults to false)
+          :svgo => false,
+          :pngout => false,
+          :verbose => false,
+          :pngquant => {:quality => 70..85},  #min..max - don't save below min, use less colors below max (both in range 0..100; in yaml - !ruby/range 0..100), ignored in default/lossless mode (defaults to 100..100, 0..100 in lossy mode)
+          :jpegrecompress => {:quality => 0},   #JPEG quality preset: 0 - low, 1 - medium, 2 - high, 3 - veryhigh (defaults to 3)
+          :jpegoptim => {:max_quality => 50}
+        })
 
       # Read the cache file, if it exists.
       @last_update = YAML::load_file @config["cache_file"] if File.file? @config["cache_file"]
